@@ -10,18 +10,93 @@ import UIKit
 import QuartzCore
 import SceneKit
 
-class GameViewController: UIViewController {
 
+
+class GameViewController: UIViewController {
+    var operationQueue: OperationQueue?
+    var activityIndicator: UIActivityIndicatorView?
+    var gameController: GameController?
+    var button: UIButton?
+    
+    
+    
+    var gameView: SCNView {
+        return view as! SCNView
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+       button = UIButton(frame: CGRect(x: 100, y: 100, width: 100, height: 100))
+        button?.setTitleColor(UIColor.red, for: UIControlState.normal)
+        button?.setTitle("begin", for: .normal)
+        button?.backgroundColor = UIColor.white
+        button?.addTarget(self, action: #selector(test), for: UIControlEvents.touchUpInside)
+        let myView = UIView()
+       // myView.addSubview(button!)
+        self.view.addSubview(button!)
+        self.view.bringSubview(toFront: button!)
+        let gameView = self.view as! SCNView
+        if UIDevice.current.userInterfaceIdiom == .pad {
+           self.gameView.contentScaleFactor = min(1.3, self.gameView.contentScaleFactor)
+            self.gameView.preferredFramesPerSecond = 60
+        }
+         gameController = GameController()
+        let scene = SCNScene(named: "art.scnassets/character/max.scn")
+        gameView.scene = scene!
+/*
+ 
+        //let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let url = URL(string: "http://127.0.0.1/Assets/character/max.scn")!
+        let url1 = URL(string: "http://127.0.0.1/Assets/character")!
+        let url2 = URL(string: "max_A0.png")!
+        let url3 = URL(string: "max_DiffuseE.png")!
+    //    let sceneSource = SCNSceneSource(url: url, options: [SCNSceneSource.LoadingOption.animationImportPolicy : SCNSceneSource.AnimationImportPolicy.doNotPlay])!
+    //    if sceneSource != nil {
+          //sceneSource.entryWithIdentifier(<#T##uid: String##String#>, withClass: <#T##T.Type#>)
+       //     print("ok")
+      //  }
         
-        // create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+     //   let scene  = SCNSceneSource(url: url!, options: [SCNSceneSource.LoadingOption.assetDirectoryURLs: SCNSceneSource.LoadingOption.assetDirectoryURLs.rawValue])
+       // var scene1: SCNScene!
+    //    let dir = [SCNSceneSource.LoadingOption.assetDirectoryURLs: SCNSceneSource.LoadingOption.assetDirectoryURLs.rawValue]
+    //    let ani = [SCNSceneSource.LoadingOption.animationImportPolicy: SCNSceneSource.AnimationImportPolicy.doNotPlay]
+    
         
-        // create and add a camera to the scene
+       // let options = [SCNSceneSource.LoadingOption.assetDirectoryURLs: url1,
+              //         SCNSceneSource.LoadingOption.animationImportPolicy:  SCNSceneSource.AnimationImportPolicy.doNotPlay] as [SCNSceneSource.LoadingOption : Any]
+        let options = [SCNSceneSource.LoadingOption.assetDirectoryURLs:[url]]
+        do {
+           // scene = try SCNScene(url: url, options: nil)
+        } catch {
+            print(error)
+            //fatalError(Error)
+        }
+     // guard  let scene1 = SCNScene(named: "art.scnassets/freeMountain.dae") else {
+     //   print("rrr:")
+     //   return
+     //   }
+     //   var  mountain: SCNNode!
+     //   mountain = scene1.rootNode.childNode(withName: "Free_Mountain", recursively: true)
+      //  mountain.simdPosition = simd_float3(0, 0, 0)
+     //   scene.rootNode.addChildNode(mountain)
+        
+        
+ 
+    
+        
+        let manager = FileManager()
+        let urlForDocument = manager.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.allDomainsMask)
+       let urlX = urlForDocument[0] as NSURL
+        let contentsOfPath = try? manager.contentsOfDirectory(atPath: urlX.path!)
+        print("contentsOfPath: \(contentsOfPath)")
+        let filePath: String = NSHomeDirectory() + "/Documents/hangge.txt"
+        let exit = manager.fileExists(atPath: filePath)
+        let Me: String = (NSHomeDirectory() + "/documents/Me")
+            
+        
+   //  try manager.createDirectory(at: Me, withIntermediateDirectories: true, attributes: nil)
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
-        scene.rootNode.addChildNode(cameraNode)
+        //scene.rootNode.addChildNode(cameraNode)
         
         // place the camera
         cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
@@ -31,7 +106,7 @@ class GameViewController: UIViewController {
         lightNode.light = SCNLight()
         lightNode.light!.type = .omni
         lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        scene.rootNode.addChildNode(lightNode)
+       scene.rootNode.addChildNode(lightNode)
         
         // create and add an ambient light to the scene
         let ambientLightNode = SCNNode()
@@ -41,11 +116,11 @@ class GameViewController: UIViewController {
         scene.rootNode.addChildNode(ambientLightNode)
         
         // retrieve the ship node
-        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
+      //  let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
         
         // animate the 3d object
-        ship.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
-        
+     //   ship.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
+    
         // retrieve the SCNView
         let scnView = self.view as! SCNView
         
@@ -85,7 +160,7 @@ class GameViewController: UIViewController {
             // highlight it
             SCNTransaction.begin()
             SCNTransaction.animationDuration = 0.5
-            
+         
             // on completion - unhighlight
             SCNTransaction.completionBlock = {
                 SCNTransaction.begin()
@@ -100,6 +175,8 @@ class GameViewController: UIViewController {
             
             SCNTransaction.commit()
         }
+ 
+ */
     }
     
     override var shouldAutorotate: Bool {
@@ -121,6 +198,68 @@ class GameViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
+    }
+    
+    @objc
+    func test(_ sender: UIButton) {
+            print("touch")
+    }
+    fileprivate func startBasicDemo() {
+        
+    
+        let imageUrls = [
+            "localhost/assets/qq.png",
+            "localhost/assets/login_close.png",
+            "localhost/assets/login_head.png",
+            "localhost/assets/register_close.png"
+        ]
+       var  image1: UIImageView?
+        var  image2: UIImageView?
+        var  image3: UIImageView?
+        var  image4: UIImageView?
+        var imageViews: [UIImageView] = []
+        
+        
+       
+        operationQueue = OperationQueue()
+        operationQueue?.maxConcurrentOperationCount = 3
+        
+       activityIndicator = UIActivityIndicatorView()
+        
+        activityIndicator?.startAnimating()
+        
+        //        使用数组给图片赋值
+        //        use Array set image
+        for imageView in imageViews {
+            operationQueue?.addOperation {
+                if let url = URL(string: "https://placebeard.it/355/140") {
+                    do {
+                        let image = UIImage(data:try Data(contentsOf: url))
+                        
+                        DispatchQueue.main.async {
+                            imageView.image = image
+                            
+                        }
+                    } catch {
+                        print(error)
+                    }
+                }
+            }
+        }
+        
+        
+        //        global queue
+        DispatchQueue.global().async {
+            [weak self] in
+            
+            //            等待所有操作都完成了,回到主线程停止刷新器。
+            //            wait Until All Operations are finished, then stop animation of activity indicator
+            self?.operationQueue?.waitUntilAllOperationsAreFinished()
+            DispatchQueue.main.async {
+                
+                self?.activityIndicator?.stopAnimating()
+            }
+        }
     }
 
 }

@@ -1,0 +1,8 @@
+	platform:ios, '8.0'
+	use_frameworks!
+	def pods
+	pod 'Starscream'
+	end
+	target "MyFirst" do
+	pods
+	end
